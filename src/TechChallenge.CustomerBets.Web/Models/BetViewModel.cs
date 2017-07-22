@@ -12,7 +12,7 @@ namespace TechChallenge.CustomerBets.Web.Models
 
         public decimal TotalReturnStake { get; set; }
         public bool IsWinning => TotalReturnStake > 0;
-        public string TotalReturnStakeHighlight => IsWinning ? "success" : "danger";
+        public string TotalReturnStakeHighlight => IsWinning ? "danger" : "success";
 
         public int RaceId { get; set; }
 

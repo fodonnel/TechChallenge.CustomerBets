@@ -8,7 +8,7 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Total Return Stake<</th>
+            <th>Total Return Stake</th>
             <th>Race</th>
             <th>Bet Return Stake</th>
             <th>Bet Won</th>
@@ -35,7 +35,7 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(model => entry.Won)
+                    @(entry.Won ?"Yes": "No")
                 </td> 
             </tr>
         }
