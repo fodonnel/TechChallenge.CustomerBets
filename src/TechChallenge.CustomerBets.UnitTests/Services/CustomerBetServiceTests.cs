@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -31,16 +30,11 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
         {
             var client = new Mock<ICustomerBetClient>();
             client.Setup(t => t.GetAsync("api/GetCustomers?code=code123&name=user123"))
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+                .ReturnsAsync(GenerateResponse<IEnumerable<CustomerDto>>(new[]
                 {
-                    Content = new ObjectContent<IEnumerable<CustomerDto>>(
-                        new[]
-                        {
-                            new CustomerDto {Id = 1, Name = "Bob"},
-                            new CustomerDto {Id = 2, Name = "Rodger"},
-                        }.AsEnumerable(),
-                        new JsonMediaTypeFormatter())
-                });
+                    new CustomerDto {Id = 1, Name = "Bob"},
+                    new CustomerDto {Id = 2, Name = "Rodger"},
+                }, HttpStatusCode.OK));
 
             var target = new CustomerBetService(client.Object, _settings.Object);
             var result = (await target.GetCustomersAsync()).ToArray();
@@ -55,10 +49,7 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
         {
             var client = new Mock<ICustomerBetClient>();
             client.Setup(t => t.GetAsync("api/GetCustomers?code=code123&name=user123"))
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<IEnumerable<CustomerDto>>(null, new JsonMediaTypeFormatter())
-                });
+                .ReturnsAsync(GenerateResponse<IEnumerable<CustomerDto>>(null, HttpStatusCode.NotFound));
 
             var target = new CustomerBetService(client.Object, _settings.Object);
 
@@ -71,16 +62,12 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
         {
             var client = new Mock<ICustomerBetClient>();
             client.Setup(t => t.GetAsync("api/GetBets?code=code123&name=user123"))
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+                .ReturnsAsync(GenerateResponse<IEnumerable<BetDto>>(new[]
                 {
-                    Content = new ObjectContent<IEnumerable<BetDto>>(
-                        new[]
-                        {
-                            new BetDto {RaceId = 100},
-                            new BetDto {RaceId = 200},
-                        }.AsEnumerable(),
-                        new JsonMediaTypeFormatter())
-                });
+                    new BetDto {RaceId = 100},
+                    new BetDto {RaceId = 200},
+                }, HttpStatusCode.OK));
+
 
             var target = new CustomerBetService(client.Object, _settings.Object);
             var result = (await target.GetBetsAsync()).ToArray();
@@ -95,10 +82,7 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
         {
             var client = new Mock<ICustomerBetClient>();
             client.Setup(t => t.GetAsync("api/GetBets?code=code123&name=user123"))
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<IEnumerable<BetDto>>(null, new JsonMediaTypeFormatter())
-                });
+                .ReturnsAsync(GenerateResponse<IEnumerable<BetDto>>(null, HttpStatusCode.NotFound));
 
             var target = new CustomerBetService(client.Object, _settings.Object);
 
@@ -106,7 +90,13 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
             Assert.That(ex.Message, Is.EqualTo("Failed to get the bets"));
         }
 
-
+        private HttpResponseMessage GenerateResponse<T>(T content, HttpStatusCode status)
+        {
+            return new HttpResponseMessage(status)
+            {
+                Content = new ObjectContent<T>(content, new JsonMediaTypeFormatter())
+            };
+        }
 
     }
 }
