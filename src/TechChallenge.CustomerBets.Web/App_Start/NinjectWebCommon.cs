@@ -67,6 +67,7 @@ namespace TechChallenge.CustomerBets.Web.App_Start
             kernel.Bind<ISettings>().To<Settings>();
             kernel.Bind<ICustomerBetClient>().To<CustomerBetClient>().InSingletonScope();
             kernel.Bind<ICustomerBetService>().To<CustomerBetService>();
+            kernel.Bind<IBetViewService>().To<BetViewService>();
         }        
     }
 }

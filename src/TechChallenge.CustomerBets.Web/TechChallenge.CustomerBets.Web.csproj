@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="Models\BetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BetViewService.cs" />
     <Compile Include="Services\CustomerBetClient.cs" />
     <Compile Include="Services\CustomerBetService.cs" />
     <Compile Include="Services\Models\BetDto.cs" />
