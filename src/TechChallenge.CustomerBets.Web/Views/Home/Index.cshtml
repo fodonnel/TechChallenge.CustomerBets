@@ -8,19 +8,35 @@
         <thead>
         <tr>
             <th>Name</th>
+            <th>Total Return Stake<</th>
             <th>Race</th>
-            <th>Return Stake</th>
-            <th>Won</th>
+            <th>Bet Return Stake</th>
+            <th>Bet Won</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var entry in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(model => entry.Name)</td>
-                <td>@Html.DisplayFor(model => entry.RaceId)</td>                
-                <td>@Html.DisplayFor(model => entry.ReturnStake)</td>  
-                <td>@Html.DisplayFor(model => entry.Won)</td> 
+                <td>
+                    @Html.DisplayFor(model => entry.Name)
+                </td>
+
+                <td class="@entry.TotalReturnStakeHighlight">
+                    @Html.DisplayFor(model => entry.TotalReturnStake)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => entry.RaceId)
+                </td> 
+                
+                <td class="@entry.ReturnStakeHighlight">
+                    @Html.DisplayFor(model => entry.ReturnStake)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => entry.Won)
+                </td> 
             </tr>
         }
         </tbody>
