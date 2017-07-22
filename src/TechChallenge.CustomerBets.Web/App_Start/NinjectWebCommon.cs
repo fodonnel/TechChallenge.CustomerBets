@@ -64,6 +64,7 @@ namespace TechChallenge.CustomerBets.Web.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IPingService>().To<PingService>();
+            kernel.Bind<ICustomerBetService>().To<CustomerBetService>();
         }        
     }
 }
