@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Moq;
 using NUnit.Framework;
-using TechChallenge.CustomerBets.Web.Controllers;
-using TechChallenge.CustomerBets.Web.Models;
 using TechChallenge.CustomerBets.Web.Services;
 using TechChallenge.CustomerBets.Web.Services.Models;
 
@@ -83,6 +77,39 @@ namespace TechChallenge.CustomerBets.UnitTests.Services
 
             Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("name1"));
+        }
+
+        [Test]
+        public async Task GetBets_Should_Calculate_TotalReturnStake()
+        {
+            var betService = new Mock<ICustomerBetService>();
+            betService.Setup(t => t.GetCustomersAsync())
+                .ReturnsAsync(new[]
+                {
+                    new CustomerDto { Id = 1, Name = "name1" },
+                    new CustomerDto { Id = 2, Name = "name2" }
+                });
+
+            betService.Setup(t => t.GetBetsAsync())
+                .ReturnsAsync(new[]
+                {
+                    new BetDto {CustomerId = 1, ReturnStake = 100, Won = true},
+                    new BetDto {CustomerId = 1, ReturnStake = 200, Won = true},
+                    new BetDto {CustomerId = 1, ReturnStake = 50, Won = false},
+
+                    new BetDto {CustomerId = 2, ReturnStake = 200, Won = true},
+                    new BetDto {CustomerId = 2, ReturnStake = 300, Won = true},
+                    new BetDto {CustomerId = 2, ReturnStake = 25, Won = false},
+                });
+
+            var target = new BetViewService(betService.Object);
+            var result = (await target.GetBets()).ToArray();
+
+            var cust1Bet = result.First(t => t.CustomerId == 1);
+            Assert.That(cust1Bet.TotalReturnStake, Is.EqualTo(250));
+
+            var cust2Bet = result.First(t => t.CustomerId == 2);
+            Assert.That(cust2Bet.TotalReturnStake, Is.EqualTo(475));
         }
     }
 }

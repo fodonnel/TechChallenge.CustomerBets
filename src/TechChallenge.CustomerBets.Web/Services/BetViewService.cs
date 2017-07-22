@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using TechChallenge.CustomerBets.Web.Models;
 
 namespace TechChallenge.CustomerBets.Web.Services
@@ -23,12 +22,24 @@ namespace TechChallenge.CustomerBets.Web.Services
 
         public async Task<IEnumerable<BetViewModel>> GetBets()
         {
-            var customerDict = (await _betService.GetCustomersAsync()).ToDictionary(t => t.Id);
-            var bets = await _betService.GetBetsAsync();
+            var bets = (await _betService.GetBetsAsync()).ToArray();
+
+            var customerNameDict = (await _betService.GetCustomersAsync())
+                .ToDictionary(t => t.Id);
+
+            var totalReturnStakeDict = bets
+                .AsParallel()
+                .GroupBy(t => t.CustomerId)
+                .Select(t => new
+                {
+                    t.Key,
+                    Total = t.Sum(c => c.ReturnStake * (c.Won ? 1 : -1))
+                }).ToDictionary(t => t.Key);
 
             return bets.Select(bet => new BetViewModel
             {
-                Name = customerDict[bet.CustomerId].Name,
+                TotalReturnStake = totalReturnStakeDict[bet.CustomerId].Total,
+                Name = customerNameDict[bet.CustomerId].Name,
                 RaceId = bet.RaceId,
                 CustomerId = bet.CustomerId,
                 ReturnStake = bet.ReturnStake,
