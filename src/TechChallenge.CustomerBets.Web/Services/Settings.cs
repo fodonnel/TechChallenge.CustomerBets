@@ -15,7 +15,7 @@ namespace TechChallenge.CustomerBets.Web.Services
 
     public class Settings : ISettings
     {
-        public string ApiCode => ConfigurationManager.AppSettings[nameof(ApiCode)];
+        public string ApiCode => Environment.GetEnvironmentVariable("CustomerBets_ApiCode");
         public string ApiUser => ConfigurationManager.AppSettings[nameof(ApiUser)];
         public string ApiBaseAddress => ConfigurationManager.AppSettings[nameof(ApiBaseAddress)];
     }
