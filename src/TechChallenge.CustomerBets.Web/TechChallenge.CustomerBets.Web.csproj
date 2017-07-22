@@ -136,6 +136,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerBetClient.cs" />
     <Compile Include="Services\CustomerBetService.cs" />
@@ -222,6 +223,7 @@
     <Content Include="ClientThirdParty\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="ClientThirdParty\jquery\jquery.min.map" />
     <Content Include="ClientThirdParty\jquery\jquery.slim.min.map" />
+    <Content Include="Scripts\global.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -237,7 +239,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

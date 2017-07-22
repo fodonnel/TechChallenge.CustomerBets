@@ -1,27 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using TechChallenge.CustomerBets.Web.Models;
 using TechChallenge.CustomerBets.Web.Services;
 
 namespace TechChallenge.CustomerBets.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IPingService _pingService;
+        private readonly ICustomerBetService _betService;
 
-        public HomeController(IPingService pingService)
+        public HomeController(ICustomerBetService betService)
         {
-            _pingService = pingService;
+            _betService = betService;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var message = _pingService.Ping();
-            ViewBag.Message = $"Ping service said: {message}";
+            var customerDict = (await _betService.GetCustomersAsync()).ToDictionary(t => t.Id);
+            var bets = await _betService.GetBetsAsync();
 
-            return View();
+            var models = bets.Select(bet => new BetViewModel
+            {
+                Name = customerDict[bet.CustomerId].Name,
+                RaceId = bet.RaceId,
+                CustomerId = bet.CustomerId,
+                ReturnStake = bet.ReturnStake,
+                Won = bet.Won
+            });
+
+            return View("Index", models);
         }
     }
 }

@@ -17,6 +17,9 @@ namespace TechChallenge.CustomerBets.Web
                 "~/ClientThirdParty/datatables/js/jquery.dataTables.js",
                 "~/ClientThirdParty/datatables/js/dataTables.bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/global").Include(
+                "~/Scripts/global.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/ClientThirdParty/bootstrap/css/bootstrap.css",
                       "~/ClientThirdParty/font-awesome/css/font-awesome.css",
